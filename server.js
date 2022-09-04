@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 require('dotenv/config');
-const PORT = process.env.port || 8080;
+const PORT = process.env.PORT || 8080;
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
@@ -13,7 +13,7 @@ const authRoutes = require('./routes/auth');
 //<------- Middlewares -------->
 app.use(cors({
 	credentials:true , 
-	origin:['http://localhost:4200']
+	origin:[process.env.FRONTEND_URL]
 }));
 
 app.use(express.json()); 
