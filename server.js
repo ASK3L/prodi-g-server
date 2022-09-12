@@ -1,36 +1,16 @@
-const express = require('express');
-const app = express();
+require('dotenv').config({ path: './config.env' });
+
 const mongoose = require('mongoose');
-require('dotenv/config');
-const PORT = process.env.PORT || 8080;
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const app = require('./app');
 
-//<------- ROUTES ------->
-const carRoutes = require('./routes/car');
-const authRoutes = require('./routes/auth');
+mongoose
+  .connect(process.env.DB_URL)
+  .then(() => console.log('Connected to database...'))
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 
-//<------- Middlewares -------->
-app.use(cors({
-	credentials:true , 
-	origin:[process.env.FRONTEND_URL]
-}));
+const port = process.env.PORT || 8080;
 
-app.use(express.json()); 
-app.use(express.urlencoded({ extended: true }));
-app.use(authRoutes);
-app.use(carRoutes);
-app.use(cookieParser());
-
-//<------- Start Express App ------->
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, (err) => {
-	if (err) throw err
-
-	console.log('MongoDB Connected')
-
-	app.listen(PORT, () => {
-		console.log(`Server listening on http://localhost:${PORT}`)
-	})
-})
-
-
+app.listen(port, () => console.log(`Listening on port ${port}...`));
